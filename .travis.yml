@@ -1,3 +1,23 @@
+language: python
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"      # current default Python on Travis CI
+  - "3.7"
+  - "3.8"
+  - "3.8-dev"  # 3.8 development branch
+  - "nightly"  # nightly build
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - pytest
+
+
+# install: ./install-dependencies.sh
+
 # language: python
 # python:
 #   - "3.4"
@@ -23,18 +43,18 @@
 
 # script: env $EXTRA_TESTS ./test.py $TEST_SUITE
 
-language: ruby
+# language: ruby
 
-rvm:
-- 2.0.0
-- 2.1.6
+# rvm:
+# - 2.0.0
+# - 2.1.6
 
-env:
-  global:
-  - SECRET_VAR1=SECRET1
-  jobs:
-  - SECRET_VAR2=SECRET2
+# env:
+#   global:
+#   - SECRET_VAR1=SECRET1
+#   jobs:
+#   - SECRET_VAR2=SECRET2
 
-jobs:
-  allow_failures:
-    - env: SECRET_VAR1=SECRET1 SECRET_VAR2=SECRET2
+# jobs:
+#   allow_failures:
+#     - env: SECRET_VAR1=SECRET1 SECRET_VAR2=SECRET2
