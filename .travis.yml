@@ -3,5 +3,8 @@ python:
   - "3.4"
 cache: pip
 
+git:
+  quiet: true
+
 script:
   - echo "hello world"
