@@ -1,22 +1,81 @@
-language: python
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"      # current default Python on Travis CI
-  - "3.7"
-  - "3.8"
-  - "3.8-dev"  # 3.8 development branch
-  - "nightly"  # nightly build
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-# command to run tests
+language: ruby
+
+services:
+  - docker
+
+before_install:
+- docker pull carlad/sinatra
+- docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
+- docker ps -a
+- docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
+
 script:
-  - echo done
+- bundle exec rake test
+
+# language: python
+# python:
+#   - "2.7"
+#   - "3.4"
+#   - "3.5"
+#   - "3.6"      # current default Python on Travis CI
+#   - "3.7"
+#   - "3.8"
+#   - "3.8-dev"  # 3.8 development branch
+#   - "nightly"  # nightly build
+
+# # command to install dependencies
+# install:
+#   - pip install -r requirements.txt
+
+  
+# command to run tests
+# script:
+#   - echo done
+
+  ############################################################
+
+# dist: xenial
+# services:
+#   - docker
+# before_install:
+#   - wget https://packages.chef.io/files/stable/inspec/3.9.0/ubuntu/16.04/inspec_3.9.0-1_amd64.deb
+#   - sudo dpkg -i inspec_3.9.0-1_  amd64.deb
+#   - chmod 755 decrypt.sh
+#   - ./decrypt.sh $ENV_FILE_PASSWORD
+#   - docker login -u $DOCKER_USER -p $DOCKER_PASS
+# jobs:
+#   include:
+#     - stage: integration tests
+#       script:
+#         - if [[ $DOCKER_IMAGE_NAME && $DOCKER_IMAGE_TAG ]]; then git checkout master; python3 update_docker_image.py -n $DOCKER_IMAGE_NAME -t $DOCKER_IMAGE_TAG -f docker-compose.yml; fi
+#         - ssh-add -D; ssh-add eagletravis-ci.pem
+#         - git remote set-url origin git@github.com:EagleGenomics/platform-deploy.git
+#         - ./deploy.sh test
+#         - while docker ps | grep starting; do sleep 5; done # allow containers to start before running tests
+#         - inspec exec kg-integration-tests --attrs  kg-integration-tests/credentials.yml
+#         - if [[ $DOCKER_IMAGE_NAME && $DOCKER_IMAGE_TAG ]]; then git commit -m "Travis updating to $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" docker-compose.yml; git push; fi
+#     - stage: deploy to qa
+#       if: branch = master AND type != pull_request
+#       script:
+#         - ./deploy.sh qa
+#     - stage: deploy to uat
+#       if: tag IS present
+#       script:
+#         - ./deploy.sh uat
+# notifications:
+  # slack: eaglegenomics:KS4pvLsmhRdqmj4ul2T4Jpjf
+  # email:
+  #   recipients:
+  #     - devops@eaglegenomics.com
+  #   on_success: never # default: change
+  #   on_failure: always # default: always
+
+
+    #############################################################
 
 
 # install: ./install-dependencies.sh
+
 
 # language: python
 # python:
