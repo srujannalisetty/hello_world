@@ -9,16 +9,32 @@
 # script:
 #   - echo "hello world"
 
-language: python
-python:
-  - '3.8'
-  - '3.7'
-  - '2.7'
+# language: python
+# python:
+#   - '3.8'
+#   - '3.7'
+#   - '2.7'
+# jobs:
+#   include:
+#     - python: '3.8' # this is not strictly necessary
+#       env: EXTRA_TESTS=true
+#     - python: '3.7'
+#       env: EXTRA_TESTS=true
+
+# script: env $EXTRA_TESTS ./test.py $TEST_SUITE
+
+language: ruby
+
+rvm:
+- 2.0.0
+- 2.1.6
+
+env:
+  global:
+  - SECRET_VAR1=SECRET1
+  jobs:
+  - SECRET_VAR2=SECRET2
+
 jobs:
-  include:
-    - python: '3.8' # this is not strictly necessary
-      env: EXTRA_TESTS=true
-    - python: '3.7'
-      env: EXTRA_TESTS=true
-      
-script: env $EXTRA_TESTS ./test.py $TEST_SUITE
+  allow_failures:
+    - env: SECRET_VAR1=SECRET1 SECRET_VAR2=SECRET2
